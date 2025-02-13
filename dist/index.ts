@@ -32,7 +32,7 @@ export type FilenSDKConfig = RequiredBy<OriginalFilenSDKConfig, "email" | "passw
 export type User = PartialBy<OriginalUser, "secretKeyId" | "accessKeyId">;
 
 export type F3PublicServerConfig = {
-  selectBucketName?: string; // name of the single bucket to use
+  masterBucket?: string; // name of the single bucket to use
 };
 
 export class F3PublicExpress {
@@ -132,7 +132,7 @@ export class F3PublicExpress {
 		}));
     this.server.use(body);
     // enabled.HeadObject && this.server.head("/:bucket/:key*", new HeadObject(this).handle);
-    enabled.GetObject && this.server.get(this.config.selectBucketName ? "/:key*" : "/:bucket/:key*", new GetObject(this).handle);
+    enabled.GetObject && this.server.get(this.config.masterBucket ? "/:key*" : "/:bucket/:key*", new GetObject(this).handle);
     this.server.get("/health", (_req: Request, res: Response) => {
       res.send("OK");
     });
