@@ -1,0 +1,23 @@
+{
+  "name": "f3-public-express",
+  "version": "1.0.0",
+  "main": "dist/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "node server.ts",
+    "start-node22": "node --experimental-strip-types server.ts"
+  },
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "author": "deswolf",
+  "license": "AGPLv3",
+  "description": "",
+  "dependencies": {
+    "@filen/s3": "^0.2.53"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "typescript": "^5.7.3"
+  }
+}
