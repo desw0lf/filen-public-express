@@ -9,7 +9,8 @@ export class EnhancedGetObject extends GetObject {
     }
     async handle(req, res, next) {
         req.params.bucket = getBucketName(req, this.server.config);
-        return super.handle(req, res, next);
+        await super.handle(req, res, next);
+        next();
     }
 }
 export default EnhancedGetObject;

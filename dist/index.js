@@ -10,6 +10,7 @@ import { Logger } from "@filen/s3/dist/logger.js";
 import GetObject from "./handlers/getObject.js";
 import { normalizeKey } from "@filen/s3/dist/utils.js";
 import { createCorsMiddleware } from "./middlewares/cors.js";
+import { contentDispositionMiddleware } from "./middlewares/content-disposition.js";
 import { errors } from "./middlewares/errors.js";
 import middlewareBody from "@filen/s3/dist/middlewares/body.js";
 import {} from "net";
@@ -107,6 +108,7 @@ export class F3PublicExpress {
         this.server.get("/health", (_req, res) => {
             res.send("OK");
         });
+        this.server.use(contentDispositionMiddleware);
         this.server.use(errors);
     }
     async startServerAndSocket() {
