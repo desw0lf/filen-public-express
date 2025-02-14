@@ -41,7 +41,7 @@ export type FilenSDKConfig = RequiredBy<OriginalFilenSDKConfig, "email" | "passw
 export type User = PartialBy<OriginalUser, "secretKeyId" | "accessKeyId">;
 
 export type F3PublicServerConfig = {
-  expressTrustProxy?: boolean | number; // https://express-rate-limit.mintlify.app/guides/troubleshooting-proxy-issues
+  expressTrustProxy?: boolean | number | string | string[]; // https://express-rate-limit.mintlify.app/guides/troubleshooting-proxy-issues
   corsBucketFileName: string;
   corsBucketCacheTTLMinutes: number;
   masterBucket?: string; // name of the single bucket to use
