@@ -28,6 +28,7 @@ const defaultCorsOptions = {
 };
 
 const defaultConfig = {
+  expressTrustProxy: 1,
   corsBucketFileName: ".f3-public.json",
   corsBucketCacheTTLMinutes: 5,
 };
@@ -40,6 +41,7 @@ export type FilenSDKConfig = RequiredBy<OriginalFilenSDKConfig, "email" | "passw
 export type User = PartialBy<OriginalUser, "secretKeyId" | "accessKeyId">;
 
 export type F3PublicServerConfig = {
+  expressTrustProxy?: boolean | number; // https://express-rate-limit.mintlify.app/guides/troubleshooting-proxy-issues
   corsBucketFileName: string;
   corsBucketCacheTTLMinutes: number;
   masterBucket?: string; // name of the single bucket to use
@@ -115,6 +117,8 @@ export class F3PublicExpress {
 			throw new Error("Either pass a configured SDK instance OR a SDKConfig object to the user object.")
 		}
     this.server = express();
+    this.server.set("trust proxy", config.expressTrustProxy);
+
 
     this.sdk.socket.on("socketEvent", (event: SocketEvent) => {
       if (event.type === "passwordChanged") {

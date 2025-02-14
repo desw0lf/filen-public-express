@@ -10,6 +10,7 @@ type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type FilenSDKConfig = RequiredBy<OriginalFilenSDKConfig, "email" | "password">;
 export type User = PartialBy<OriginalUser, "secretKeyId" | "accessKeyId">;
 export type F3PublicServerConfig = {
+    expressTrustProxy?: boolean | number;
     corsBucketFileName: string;
     corsBucketCacheTTLMinutes: number;
     masterBucket?: string;

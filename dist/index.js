@@ -22,6 +22,7 @@ const defaultCorsOptions = {
     methods: "GET",
 };
 const defaultConfig = {
+    expressTrustProxy: 1,
     corsBucketFileName: ".f3-public.json",
     corsBucketCacheTTLMinutes: 5,
 };
@@ -74,6 +75,7 @@ export class F3PublicExpress {
             throw new Error("Either pass a configured SDK instance OR a SDKConfig object to the user object.");
         }
         this.server = express();
+        this.server.set("trust proxy", config.expressTrustProxy);
         this.sdk.socket.on("socketEvent", (event) => {
             if (event.type === "passwordChanged") {
                 this.user.sdk = undefined;
