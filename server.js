@@ -1,6 +1,6 @@
-import { F3PublicExpress } from "./dist/index.ts";
+import { F3PublicExpress } from "./dist";
 
-const { FILEN_EMAIL, FILEN_PASSWORD } = process.env as Record<string, string>;
+const { FILEN_EMAIL, FILEN_PASSWORD } = process.env;
 
 const credentials = {
   email: FILEN_EMAIL,

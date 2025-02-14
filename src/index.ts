@@ -149,7 +149,7 @@ export class F3PublicExpress {
       standardHeaders: "draft-7",
       legacyHeaders: true
 		}));
-    this.server.use(body);
+    this.server.use(body as any);
     // enabled.HeadObject && this.server.head("/:bucket/:key*", new HeadObject(this).handle);
     enabled.GetObject && this.server.get(this.config.masterBucket ? "/:key*" : "/:bucket/:key*", new GetObject(this).handle);
     this.server.get("/health", (_req: Request, res: Response) => {

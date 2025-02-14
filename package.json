@@ -1,11 +1,13 @@
 {
   "name": "f3-public-express",
   "version": "1.0.0",
-  "main": "dist/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
   "type": "module",
   "scripts": {
-    "start": "node server.ts",
-    "start-node22": "node --experimental-strip-types server.ts"
+    "tsc": "tsc --build",
+    "build": "npm run tsc",
+    "start-example": "node server.js"
   },
   "engines": {
     "node": ">=22.6.0"

@@ -3,7 +3,8 @@ Simple public file retrieval server via filen.io SDK
 
 ## Node.js version
 Minimum: v22.6.0
-Preferred: _(check `.nvmrc`)_
+
+Preferred: [.nvmrc](./blob/main/.nvmrc)
 
 ## Acknowledgments
 This project:
