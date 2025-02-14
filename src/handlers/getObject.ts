@@ -9,9 +9,15 @@ export class EnhancedGetObject extends GetObject {
     this.handle = this.handle.bind(this);
   }
 
+  private modifyResponseHeaders(res: Response) {
+    // maybe only for images/videos etc, todo blacklist / whitelist
+    res.setHeader("Content-Disposition", "inline");
+  }
+
   public async handle(req: Request, res: Response, next: NextFunction): Promise<void> {
     req.params.bucket = getBucketName(req, (this as any).server.config);
-    return super.handle(req, res, next);
+    await super.handle(req, res, next);
+    this.modifyResponseHeaders(res);
   }
 }
 
