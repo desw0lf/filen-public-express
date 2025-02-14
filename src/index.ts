@@ -9,7 +9,7 @@ import { Logger } from "@filen/s3/dist/logger.js"
 // import HeadObject from "./handlers/headObject.ts";
 import GetObject from "./handlers/getObject.ts";
 import { normalizeKey } from "@filen/s3/dist/utils.js";
-import { createCorsMiddleware } from "./middlewares/cors.ts";
+import { createCorsMiddleware } from "./middlewares/cors/index.ts";
 import { contentDispositionMiddleware } from "./middlewares/content-disposition.ts";
 import { errors } from "./middlewares/errors.ts";
 import middlewareBody from "@filen/s3/dist/middlewares/body.js";
@@ -17,6 +17,7 @@ import middlewareBody from "@filen/s3/dist/middlewares/body.js";
 import type { ServerConfig, User as OriginalUser, RateLimit } from "@filen/s3";
 import { type Socket } from "net";
 import { type Duplex } from "stream";
+import type { CorsEntry } from "./middlewares/cors/get-cors-entries.ts";
 
 const body = (middlewareBody as any).default as typeof middlewareBody;
 
@@ -28,9 +29,9 @@ const defaultCorsOptions = {
 };
 
 const defaultConfig = {
-  expressTrustProxy: 1,
+  expressTrustProxy: false,
   corsBucketFileName: ".f3-public.json",
-  corsBucketCacheTTLMinutes: 5,
+  corsBucketCacheTTLMinutes: 10,
 };
 
 type RequiredBy<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
@@ -44,6 +45,7 @@ export type F3PublicServerConfig = {
   expressTrustProxy?: boolean | number | string | string[]; // https://express-rate-limit.mintlify.app/guides/troubleshooting-proxy-issues
   corsBucketFileName: string;
   corsBucketCacheTTLMinutes: number;
+  corsBucketCachePurgeUrl?: string;
   masterBucket?: string; // name of the single bucket to use
   // ignoreDotFiles?: boolean; // todo
 };
@@ -58,7 +60,7 @@ export class F3PublicExpress {
   public rateLimit: RateLimit;
   public logger: Logger;
   public config: F3PublicServerConfig;
-  public corsBucketCache = new Map<string, { origins: string[]; expiresAt: number }>();
+  public corsBucketCache = new Map<string, { entries: CorsEntry[]; expiresAt: number }>();
 
   public constructor({
     hostname = "0.0.0.0",
@@ -136,11 +138,17 @@ export class F3PublicExpress {
     return (this.sdk as any).isLoggedIn();
   }
 
-  public updateCorsCache(bucket: string, origins: string[], now: number, cacheHit: boolean): void {
+  public updateCorsCache(bucket: string, entries: CorsEntry[], now: number, cacheHit: boolean): void {
     if (this.config.corsBucketCacheTTLMinutes <= 0 || cacheHit) {
       return;
     }
-    this.corsBucketCache.set(bucket, { origins, expiresAt: now + this.config.corsBucketCacheTTLMinutes * 60000 });
+    this.corsBucketCache.set(bucket, { entries, expiresAt: now + this.config.corsBucketCacheTTLMinutes * 60000 });
+  }
+
+  private purgeCorsCache(): number {
+    const size = this.corsBucketCache.size;
+    this.corsBucketCache.clear();
+    return size;
   }
 
   private initializeRoutes(enabled: Record<string, unknown>, corsOptions: any): void {
@@ -160,6 +168,11 @@ export class F3PublicExpress {
     this.server.get("/health", (_req: Request, res: Response) => {
       res.send("OK");
     });
+    if (this.config.corsBucketCachePurgeUrl && this.config.corsBucketCachePurgeUrl.startsWith("/")) {
+      this.server.get(this.config.corsBucketCachePurgeUrl, (_req: Request, res: Response) => {
+        res.send(this.purgeCorsCache());
+      });
+    }
     this.server.use(contentDispositionMiddleware);
     this.server.use(errors);
   }
@@ -225,7 +238,7 @@ export class F3PublicExpress {
           return;
         }
         resolve();
-      })
+      });
 
       if (terminate) {
         for (const socketId in this.connections) {
@@ -237,7 +250,7 @@ export class F3PublicExpress {
           }
         }
       }
-    })
+    });
   }
 }
 

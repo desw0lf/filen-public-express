@@ -9,7 +9,7 @@ import { Logger } from "@filen/s3/dist/logger.js";
 // import HeadObject from "./handlers/headObject.ts";
 import GetObject from "./handlers/getObject.js";
 import { normalizeKey } from "@filen/s3/dist/utils.js";
-import { createCorsMiddleware } from "./middlewares/cors.js";
+import { createCorsMiddleware } from "./middlewares/cors/index.js";
 import { contentDispositionMiddleware } from "./middlewares/content-disposition.js";
 import { errors } from "./middlewares/errors.js";
 import middlewareBody from "@filen/s3/dist/middlewares/body.js";
@@ -22,9 +22,9 @@ const defaultCorsOptions = {
     methods: "GET",
 };
 const defaultConfig = {
-    expressTrustProxy: 1,
+    expressTrustProxy: false,
     corsBucketFileName: ".f3-public.json",
-    corsBucketCacheTTLMinutes: 5,
+    corsBucketCacheTTLMinutes: 10,
 };
 export class F3PublicExpress {
     server;
@@ -88,11 +88,16 @@ export class F3PublicExpress {
     get isLoggedIn() {
         return this.sdk.isLoggedIn();
     }
-    updateCorsCache(bucket, origins, now, cacheHit) {
+    updateCorsCache(bucket, entries, now, cacheHit) {
         if (this.config.corsBucketCacheTTLMinutes <= 0 || cacheHit) {
             return;
         }
-        this.corsBucketCache.set(bucket, { origins, expiresAt: now + this.config.corsBucketCacheTTLMinutes * 60000 });
+        this.corsBucketCache.set(bucket, { entries, expiresAt: now + this.config.corsBucketCacheTTLMinutes * 60000 });
+    }
+    purgeCorsCache() {
+        const size = this.corsBucketCache.size;
+        this.corsBucketCache.clear();
+        return size;
     }
     initializeRoutes(enabled, corsOptions) {
         this.connections = {};
@@ -110,6 +115,11 @@ export class F3PublicExpress {
         this.server.get("/health", (_req, res) => {
             res.send("OK");
         });
+        if (this.config.corsBucketCachePurgeUrl && this.config.corsBucketCachePurgeUrl.startsWith("/")) {
+            this.server.get(this.config.corsBucketCachePurgeUrl, (_req, res) => {
+                res.send(this.purgeCorsCache());
+            });
+        }
         this.server.use(contentDispositionMiddleware);
         this.server.use(errors);
     }

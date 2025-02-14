@@ -5,6 +5,7 @@ import { Logger } from "@filen/s3/dist/logger.js";
 import type { ServerConfig, User as OriginalUser, RateLimit } from "@filen/s3";
 import { type Socket } from "net";
 import { type Duplex } from "stream";
+import type { CorsEntry } from "./middlewares/cors/get-cors-entries.ts";
 type RequiredBy<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type FilenSDKConfig = RequiredBy<OriginalFilenSDKConfig, "email" | "password">;
@@ -13,6 +14,7 @@ export type F3PublicServerConfig = {
     expressTrustProxy?: boolean | number | string | string[];
     corsBucketFileName: string;
     corsBucketCacheTTLMinutes: number;
+    corsBucketCachePurgeUrl?: string;
     masterBucket?: string;
 };
 export declare class F3PublicExpress {
@@ -26,7 +28,7 @@ export declare class F3PublicExpress {
     logger: Logger;
     config: F3PublicServerConfig;
     corsBucketCache: Map<string, {
-        origins: string[];
+        entries: CorsEntry[];
         expiresAt: number;
     }>;
     constructor({ hostname, port, user, https, rateLimit, enabledRoutes, disableLogging, config, corsOptions }: {
@@ -43,7 +45,8 @@ export declare class F3PublicExpress {
         enabledRoutes?: Record<string, unknown>;
     });
     private get isLoggedIn();
-    updateCorsCache(bucket: string, origins: string[], now: number, cacheHit: boolean): void;
+    updateCorsCache(bucket: string, entries: CorsEntry[], now: number, cacheHit: boolean): void;
+    private purgeCorsCache;
     private initializeRoutes;
     private startServerAndSocket;
     getObject(key: string): Promise<{

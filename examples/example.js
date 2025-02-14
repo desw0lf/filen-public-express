@@ -1,4 +1,4 @@
-import { F3PublicExpress } from "./dist/index.js";
+import { F3PublicExpress } from "../dist/index.js";
 
 const { FILEN_EMAIL, FILEN_PASSWORD } = process.env;
 
