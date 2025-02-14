@@ -9,6 +9,8 @@ import { Logger } from "@filen/s3/dist/logger.js"
 // import HeadObject from "./handlers/headObject.ts";
 import GetObject from "./handlers/getObject.ts";
 import { normalizeKey } from "@filen/s3/dist/utils.js";
+import { createCorsMiddleware } from "./middlewares/cors.ts";
+import { errors } from "./middlewares/errors.ts";
 import middlewareBody from "@filen/s3/dist/middlewares/body.js";
 // ? TYPES:
 import type { ServerConfig, User as OriginalUser, RateLimit } from "@filen/s3";
@@ -24,6 +26,11 @@ const defaultCorsOptions = {
   methods: "GET",
 };
 
+const defaultConfig = {
+  corsBucketFileName: ".f3-public.json",
+  corsBucketCacheTTLMinutes: 5,
+};
+
 type RequiredBy<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
@@ -32,7 +39,10 @@ export type FilenSDKConfig = RequiredBy<OriginalFilenSDKConfig, "email" | "passw
 export type User = PartialBy<OriginalUser, "secretKeyId" | "accessKeyId">;
 
 export type F3PublicServerConfig = {
+  corsBucketFileName: string;
+  corsBucketCacheTTLMinutes: number;
   masterBucket?: string; // name of the single bucket to use
+  // ignoreDotFiles?: boolean; // todo
 };
 
 export class F3PublicExpress {
@@ -45,6 +55,7 @@ export class F3PublicExpress {
   public rateLimit: RateLimit;
   public logger: Logger;
   public config: F3PublicServerConfig;
+  public corsBucketCache = new Map<string, { origins: string[]; expiresAt: number }>();
 
   public constructor({
     hostname = "0.0.0.0",
@@ -56,13 +67,13 @@ export class F3PublicExpress {
       limit: 1000,
       key: "accessKeyId" // not used
     },
-    disableLogging = false,
-    config = {},
-    corsOptions = defaultCorsOptions,
     enabledRoutes = {
       GetObject: true,
       // HeadObject: true
-    }
+    },
+    disableLogging = false,
+    config = {},
+    corsOptions = defaultCorsOptions
   }: {
     hostname?: string
     port?: number
@@ -70,13 +81,15 @@ export class F3PublicExpress {
     user: User & { sdkConfig?: FilenSDKConfig }
     rateLimit?: RateLimit
     disableLogging?: boolean
-    config?: F3PublicServerConfig
+    config?: Partial<F3PublicServerConfig>
     corsOptions?: any;
     enabledRoutes?: Record<string, unknown>
   }) {
     this.serverConfig = { hostname, port, https };
     this.rateLimit = rateLimit;
     this.logger = new Logger(disableLogging, false);
+    this.config = { ...defaultConfig, ...config };
+    this.updateCorsCache = this.updateCorsCache.bind(this);
 
 		if (user.sdk) {
 			this.sdk = user.sdk;
@@ -111,7 +124,6 @@ export class F3PublicExpress {
       }
     })
 
-    this.config = config;
     this.initializeRoutes(enabledRoutes, corsOptions);
   }
 
@@ -119,11 +131,18 @@ export class F3PublicExpress {
     return (this.sdk as any).isLoggedIn();
   }
 
+  public updateCorsCache(bucket: string, origins: string[], now: number, cacheHit: boolean): void {
+    if (this.config.corsBucketCacheTTLMinutes <= 0 || cacheHit) {
+      return;
+    }
+    this.corsBucketCache.set(bucket, { origins, expiresAt: now + this.config.corsBucketCacheTTLMinutes * 60000 });
+  }
+
   private initializeRoutes(enabled: Record<string, unknown>, corsOptions: any): void {
     this.connections = {};
 
 		this.server.disable("x-powered-by");
-    // TODO cors?
+    this.server.use(createCorsMiddleware(this, corsOptions));
 		this.server.use(rateLimit({
       windowMs: this.rateLimit.windowMs,
       limit: this.rateLimit.limit,
@@ -136,6 +155,7 @@ export class F3PublicExpress {
     this.server.get("/health", (_req: Request, res: Response) => {
       res.send("OK");
     });
+    this.server.use(errors);
   }
 
   private async startServerAndSocket(): Promise<void> {
@@ -214,3 +234,5 @@ export class F3PublicExpress {
     })
   }
 }
+
+export type Server = F3PublicExpress;

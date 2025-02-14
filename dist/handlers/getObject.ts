@@ -1,23 +1,16 @@
 import { type Request, type Response, type NextFunction } from "express";
 import { GetObject } from "@filen/s3/dist/handlers/getObject.js";
-// import type Server from "../";
-
-// type PublicInterface<T> = Pick<T, keyof T>;
-
-type Server = any; // todo
+import { getBucketName } from "../utils/get-bucket-name.ts";
+import { type Server } from "../index.ts";
 
 export class EnhancedGetObject extends GetObject {
   public constructor(server: Server) {
-    super(server);
+    super(server as any);
     this.handle = this.handle.bind(this);
   }
 
   public async handle(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const { config } = (this as any).server as Server;
-    const master = !config.masterBucket ? undefined : config.masterBucket.startsWith("public_") ? config.masterBucket : `public_${config.masterBucket}`;
-    const updatedBucketName = master || `public_${req.params.bucket}`;
-    req.params.bucket = updatedBucketName;
-    // todo check individual cors
+    req.params.bucket = getBucketName(req, (this as any).server.config);
     return super.handle(req, res, next);
   }
 }
