@@ -4,32 +4,30 @@ import { readAndParseCorsEntries, findCorsEntryByMethod, parseOriginList } from 
 import {} from "express";
 import {} from "../../index.js";
 async function getCorsEntries(sdk, path, cacheEntry, method, now) {
-    const def = { hit: false, entries: [findCorsEntryByMethod([], method)] };
-    if (path.startsWith("/public_/")) { // no bucket
-        return new Promise((resolve) => { resolve(def); });
-    }
     if (cacheEntry && cacheEntry.expiresAt > now) {
-        return new Promise((resolve) => { resolve({ hit: true, entries: cacheEntry.entries }); });
+        return { hit: true, entries: cacheEntry.entries };
     }
     try {
         const entries = await readAndParseCorsEntries(sdk, path);
         return { hit: false, entries };
     }
     catch {
-        return def;
+        return { hit: false, entries: [findCorsEntryByMethod([], method)] };
     }
 }
 export const createCorsMiddleware = (server, defaultOptions) => {
+    const { sdk, config, corsBucketCache, updateCorsCache } = server;
+    async function findCorsEntry(req, bucket) {
+        const path = "/" + bucket + "/" + config.corsBucketFileName;
+        const now = Date.now();
+        const { hit, entries } = await getCorsEntries(sdk, path, corsBucketCache.get(bucket), req.method, now);
+        updateCorsCache(bucket, entries, now, hit);
+        return findCorsEntryByMethod(entries, req.method);
+    }
     return cors(async (req, callback) => {
         try {
-            const { sdk, config, corsBucketCache, updateCorsCache } = server;
             const bucket = getBucketName({ params: { bucket: req.path.split("/")[1] || "" } }, config);
-            const path = "/" + bucket + "/" + config.corsBucketFileName;
-            const now = Date.now();
-            const { hit, entries } = await getCorsEntries(sdk, path, corsBucketCache.get(bucket), req.method, now);
-            console.log(hit, entries);
-            updateCorsCache(bucket, entries, now, hit);
-            const { AllowedOrigins } = findCorsEntryByMethod(entries, req.method);
+            const { AllowedOrigins } = bucket === "public_" ? { AllowedOrigins: [] } : await findCorsEntry(req, bucket);
             const allowedOrigins = AllowedOrigins.length > 0 ? AllowedOrigins : parseOriginList(defaultOptions.origin);
             const corsOptions = {
                 ...defaultOptions,
