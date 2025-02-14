@@ -4,7 +4,7 @@ Simple public file retrieval server via filen.io SDK
 ## Node.js version
 Minimum: v22.6.0
 
-Preferred: [.nvmrc](./blob/main/.nvmrc)
+Preferred: [.nvmrc](./blob/master/.nvmrc)
 
 ## Acknowledgments
 This project:
@@ -12,4 +12,4 @@ This project:
 - Incorporates code from [filen-s3](https://github.com/FilenCloudDienste/filen-s3)
 
 ## License
-Distributed under the AGPL-3.0 License. See [LICENSE](./blob/main/LICENSE) for more information.
+Distributed under the AGPL-3.0 License. See [LICENSE](./blob/master/LICENSE) for more information.
