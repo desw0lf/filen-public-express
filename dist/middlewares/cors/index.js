@@ -3,6 +3,7 @@ import { getBucketName } from "../../utils/get-bucket-name.js";
 import { readAndParseCorsEntries, findCorsEntryByMethod, parseOriginList } from "./get-cors-entries.js";
 import {} from "express";
 import {} from "../../index.js";
+import { createError } from "../../utils/error.js";
 async function getCorsEntries(sdk, path, cacheEntry, method, now) {
     if (cacheEntry && cacheEntry.expiresAt > now) {
         return { hit: true, entries: cacheEntry.entries };
@@ -27,7 +28,7 @@ export const createCorsMiddleware = (server, defaultOptions) => {
     return cors(async (req, callback) => {
         try {
             const bucket = getBucketName({ params: { bucket: req.path.split("/")[1] || "" } }, config);
-            const { AllowedOrigins } = bucket === "public_" ? { AllowedOrigins: [] } : await findCorsEntry(req, bucket);
+            const { AllowedOrigins } = bucket === "public_" ? { AllowedOrigins: ["*"] } : await findCorsEntry(req, bucket);
             const allowedOrigins = AllowedOrigins.length > 0 ? AllowedOrigins : parseOriginList(defaultOptions.origin);
             const corsOptions = {
                 ...defaultOptions,
@@ -36,7 +37,7 @@ export const createCorsMiddleware = (server, defaultOptions) => {
                         cb(null, true);
                     }
                     else {
-                        cb(new Error("CORS"));
+                        cb(createError(403, "Access Denied"));
                     }
                 },
             };

@@ -1,0 +1,6 @@
+[
+  {
+    "AllowedMethods": ["GET"],
+    "AllowedOrigins": ["https://google.com", "https://example.com"]
+  }
+]

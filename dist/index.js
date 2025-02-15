@@ -12,6 +12,7 @@ import { normalizeKey } from "@filen/s3/dist/utils.js";
 import { createCorsMiddleware } from "./middlewares/cors/index.js";
 import { contentDispositionMiddleware } from "./middlewares/content-disposition.js";
 import { errors } from "./middlewares/errors.js";
+import { createError } from "./utils/error.js";
 import middlewareBody from "@filen/s3/dist/middlewares/body.js";
 import {} from "net";
 import {} from "stream";
@@ -111,7 +112,7 @@ export class F3PublicExpress {
         }));
         this.server.use(body);
         // enabled.HeadObject && this.server.head("/:bucket/:key*", new HeadObject(this).handle);
-        enabled.GetObject && this.server.get(this.config.masterBucket ? "/:key*" : "/:bucket/:key*", new GetObject(this).handle);
+        enabled.GetObject && this.server.get(this.config.masterBucket ? "/:key*" : "/:bucket/:key*", new GetObject(this).handle, contentDispositionMiddleware);
         this.server.get("/health", (_req, res) => {
             res.send("OK");
         });
@@ -120,7 +121,9 @@ export class F3PublicExpress {
                 res.send(this.purgeCorsCache());
             });
         }
-        this.server.use(contentDispositionMiddleware);
+        this.server.use((_req, _res) => {
+            throw createError(404, "NoSuchKey", "The specified key does not exist.");
+        });
         this.server.use(errors);
     }
     async startServerAndSocket() {
@@ -135,7 +138,7 @@ export class F3PublicExpress {
                 this.serverInstance.timeout = 86400000 * 7;
                 this.serverInstance.keepAliveTimeout = 86400000 * 7;
                 this.serverInstance.headersTimeout = 86400000 * 7 * 2;
-                console.log(`F3 Public Server started on ${protocol}://${this.serverConfig.hostname}:${this.serverConfig.port}`);
+                console.log(`F3 Public Express Server started on ${protocol}://${this.serverConfig.hostname}:${this.serverConfig.port}`);
                 resolve();
             })
                 .on("connection", (socket) => {

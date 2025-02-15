@@ -3,6 +3,7 @@ import { getBucketName } from "../../utils/get-bucket-name.ts";
 import { readAndParseCorsEntries, findCorsEntryByMethod, parseOriginList, type CorsEntry } from "./get-cors-entries.ts";
 import { type Request } from "express";
 import { type Server } from "../../index.ts";
+import { createError, type ErrorWithStatus } from "../../utils/error.ts";
 
 
 type CorsOptions = Record<string, any>;
@@ -31,10 +32,10 @@ export const createCorsMiddleware = (server: Server, defaultOptions: CorsOptions
     return findCorsEntryByMethod(entries, req.method);
   }
 
-  return cors(async (req: Request, callback: (error: Error | null, options?: CorsOptions) => void) => {
+  return cors(async (req: Request, callback: (error: ErrorWithStatus | null, options?: CorsOptions) => void) => {
       try {
         const bucket = getBucketName({ params: { bucket: req.path.split("/")[1] || "" }} as any, config);
-        const { AllowedOrigins } = bucket === "public_" ? { AllowedOrigins: [] } : await findCorsEntry(req, bucket); // todo, move cors to bucket only endpoints
+        const { AllowedOrigins } = bucket === "public_" ? { AllowedOrigins: ["*"] } : await findCorsEntry(req, bucket);
         const allowedOrigins = AllowedOrigins.length > 0 ? AllowedOrigins : parseOriginList(defaultOptions.origin);
 
         const corsOptions: CorsOptions = {
@@ -43,11 +44,10 @@ export const createCorsMiddleware = (server: Server, defaultOptions: CorsOptions
             if (!origin || allowedOrigins[0] === "*" || allowedOrigins.includes(origin)) {
               cb(null, true);
             } else {
-              cb(new Error("CORS"));
+              cb(createError(403, "Access Denied"));
             }
           },
         };
-
         callback(null, corsOptions);
       } catch (error) {
         console.error("CORS error:", error);

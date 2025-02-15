@@ -16,6 +16,7 @@
   "author": "deswolf",
   "license": "AGPLv3",
   "description": "",
+  "keywords": ["filen", "s3", "filen.io"],
   "dependencies": {
     "@filen/s3": "^0.2.53",
     "cors": "^2.8.5"
