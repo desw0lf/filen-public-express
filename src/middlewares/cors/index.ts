@@ -21,6 +21,14 @@ async function getCorsEntries(sdk: Server["sdk"], path: string, cacheEntry: Retu
   }
 }
 
+function isAllowed(allowedOrigins: string[], { origin, referer }: { origin?: string; referer?: string }): boolean {
+  if (allowedOrigins[0] === "*") return true;
+  if (!origin && !referer) return true;
+  if (origin && allowedOrigins.includes(origin)) return true;
+  if (referer && allowedOrigins.includes(referer)) return true;
+  return false;
+}
+
 export const createCorsMiddleware = (server: Server, defaultOptions: CorsOptions) => {
   const { sdk, config, corsBucketCache, updateCorsCache } = server;
 
@@ -38,10 +46,12 @@ export const createCorsMiddleware = (server: Server, defaultOptions: CorsOptions
         const { AllowedOrigins } = bucket === "public_" ? { AllowedOrigins: ["*"] } : await findCorsEntry(req, bucket);
         const allowedOrigins = AllowedOrigins.length > 0 ? AllowedOrigins : parseOriginList(defaultOptions.origin);
 
+        const referer = req.headers.referer ? new URL(req.headers.referer).origin : null;
+
         const corsOptions: CorsOptions = {
           ...defaultOptions,
           origin: (origin: string | null | undefined, cb: (err: Error | null, origin?: boolean) => void) => {
-            if (!origin || allowedOrigins[0] === "*" || allowedOrigins.includes(origin)) {
+            if (isAllowed(allowedOrigins, { origin, referer })) {
               cb(null, true);
             } else {
               cb(createError(403, "Access Denied"));

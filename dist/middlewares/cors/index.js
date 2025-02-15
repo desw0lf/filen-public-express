@@ -16,6 +16,17 @@ async function getCorsEntries(sdk, path, cacheEntry, method, now) {
         return { hit: false, entries: [findCorsEntryByMethod([], method)] };
     }
 }
+function isAllowed(allowedOrigins, { origin, referer }) {
+    if (allowedOrigins[0] === "*")
+        return true;
+    if (!origin && !referer)
+        return true;
+    if (origin && allowedOrigins.includes(origin))
+        return true;
+    if (referer && allowedOrigins.includes(referer))
+        return true;
+    return false;
+}
 export const createCorsMiddleware = (server, defaultOptions) => {
     const { sdk, config, corsBucketCache, updateCorsCache } = server;
     async function findCorsEntry(req, bucket) {
@@ -30,10 +41,11 @@ export const createCorsMiddleware = (server, defaultOptions) => {
             const bucket = getBucketName({ params: { bucket: req.path.split("/")[1] || "" } }, config);
             const { AllowedOrigins } = bucket === "public_" ? { AllowedOrigins: ["*"] } : await findCorsEntry(req, bucket);
             const allowedOrigins = AllowedOrigins.length > 0 ? AllowedOrigins : parseOriginList(defaultOptions.origin);
+            const referer = req.headers.referer ? new URL(req.headers.referer).origin : null;
             const corsOptions = {
                 ...defaultOptions,
                 origin: (origin, cb) => {
-                    if (!origin || allowedOrigins[0] === "*" || allowedOrigins.includes(origin)) {
+                    if (isAllowed(allowedOrigins, { origin, referer })) {
                         cb(null, true);
                     }
                     else {
