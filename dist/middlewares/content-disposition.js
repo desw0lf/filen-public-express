@@ -4,6 +4,7 @@ export const contentDispositionMiddleware = (downloadFileParam) => (req, res, _n
     const contentDispositionHeader = res.getHeader("Content-Disposition");
     const isDownloadAllowed = downloadFileParam ? req.query[downloadFileParam] === "1" || req.query[downloadFileParam] === "true" : false;
     if (!res.headersSent && !isDownloadAllowed && typeof contentDispositionHeader === "string" && contentDispositionHeader.startsWith("attachment")) {
-        res.setHeader("Content-Disposition", "inline");
+        const suffix = contentDispositionHeader.split(";")[1];
+        res.setHeader("Content-Disposition", "inline" + (suffix ? `;${suffix}` : ""));
     }
 };
