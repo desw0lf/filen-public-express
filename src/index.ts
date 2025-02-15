@@ -33,6 +33,7 @@ const defaultConfig = {
   expressTrustProxy: false,
   corsBucketFileName: ".f3-public.json",
   corsBucketCacheTTLMinutes: 10,
+  downloadFileParam: "dl"
 };
 
 type RequiredBy<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
@@ -48,7 +49,7 @@ export type F3PublicServerConfig = {
   corsBucketCacheTTLMinutes: number;
   corsBucketCachePurgeUrl?: string;
   masterBucket?: string; // name of the single bucket to use
-  downloadFileParam?: string; // e.g. "dl", used as query param ".../file.pdf?dl=1" or ".../file.pdf?dl=true"
+  downloadFileParam?: string | null | false; // e.g. "dl", used as query param ".../file.pdf?dl=1" or ".../file.pdf?dl=true"
   // ignoreDotFiles?: boolean; // todo
 };
 

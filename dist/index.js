@@ -26,6 +26,7 @@ const defaultConfig = {
     expressTrustProxy: false,
     corsBucketFileName: ".f3-public.json",
     corsBucketCacheTTLMinutes: 10,
+    downloadFileParam: "dl"
 };
 export class F3PublicExpress {
     server;
