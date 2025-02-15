@@ -112,7 +112,9 @@ export class F3PublicExpress {
         }));
         this.server.use(body);
         // enabled.HeadObject && this.server.head("/:bucket/:key*", new HeadObject(this).handle);
-        enabled.GetObject && this.server.get(this.config.masterBucket ? "/:key*" : "/:bucket/:key*", new GetObject(this).handle, contentDispositionMiddleware);
+        if (enabled.GetObject) {
+            this.server.get(this.config.masterBucket ? "/:key*" : "/:bucket/:key*", new GetObject(this).handle, contentDispositionMiddleware(this.config.downloadFileParam));
+        }
         this.server.get("/health", (_req, res) => {
             res.send("OK");
         });

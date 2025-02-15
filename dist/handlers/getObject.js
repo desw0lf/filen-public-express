@@ -8,7 +8,12 @@ export class EnhancedGetObject extends GetObject {
         this.handle = this.handle.bind(this);
     }
     async handle(req, res, next) {
-        req.params.bucket = getBucketName(req, this.server.config);
+        const config = this.server.config;
+        if (config.downloadFileParam && req.query[config.downloadFileParam] && Object.keys(req.query).length <= 1) {
+            // allow only one query param that was set
+            req.url = req.url.split("?")[0];
+        }
+        req.params.bucket = getBucketName(req, config);
         await super.handle(req, res, next);
         next();
     }

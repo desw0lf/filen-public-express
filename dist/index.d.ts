@@ -16,6 +16,7 @@ export type F3PublicServerConfig = {
     corsBucketCacheTTLMinutes: number;
     corsBucketCachePurgeUrl?: string;
     masterBucket?: string;
+    downloadFileParam?: string;
 };
 export declare class F3PublicExpress {
     readonly server: Express;

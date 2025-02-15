@@ -48,6 +48,7 @@ export type F3PublicServerConfig = {
   corsBucketCacheTTLMinutes: number;
   corsBucketCachePurgeUrl?: string;
   masterBucket?: string; // name of the single bucket to use
+  downloadFileParam?: string; // e.g. "dl", used as query param ".../file.pdf?dl=1" or ".../file.pdf?dl=true"
   // ignoreDotFiles?: boolean; // todo
 };
 
@@ -165,7 +166,9 @@ export class F3PublicExpress {
 		}));
     this.server.use(body as any);
     // enabled.HeadObject && this.server.head("/:bucket/:key*", new HeadObject(this).handle);
-    enabled.GetObject && this.server.get(this.config.masterBucket ? "/:key*" : "/:bucket/:key*", new GetObject(this).handle, contentDispositionMiddleware);
+    if (enabled.GetObject) {
+      this.server.get(this.config.masterBucket ? "/:key*" : "/:bucket/:key*", new GetObject(this).handle, contentDispositionMiddleware(this.config.downloadFileParam));
+    }
     this.server.get("/health", (_req: Request, res: Response) => {
       res.send("OK");
     });
