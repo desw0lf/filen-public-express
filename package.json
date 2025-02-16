@@ -1,5 +1,5 @@
 {
-  "name": "f3-public-express",
+  "name": "filen-public-express",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.js",

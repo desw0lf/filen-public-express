@@ -1,4 +1,4 @@
-import { F3PublicExpress } from "../dist/index.js";
+import { FilenPublicExpress } from "../dist/index.js";
 
 const { FILEN_EMAIL, FILEN_PASSWORD } = process.env;
 
@@ -7,7 +7,7 @@ const credentials = {
   password: FILEN_PASSWORD,
 };
 
-const server = new F3PublicExpress({
+const server = new FilenPublicExpress({
   user: { sdkConfig: credentials },
   config: {}
 });

@@ -15,7 +15,7 @@ export type IgnoreRule = string | {
     endsWith: string;
     contains: string;
 };
-export type F3PublicServerConfig = {
+export type FilenPublicServerConfig = {
     expressTrustProxy?: boolean | number | string | string[];
     corsBucketFileName: string;
     corsBucketCacheTTLMinutes: number;
@@ -24,7 +24,7 @@ export type F3PublicServerConfig = {
     downloadFileParam?: string | null | false;
     ignoreList?: IgnoreRule[];
 };
-export declare class F3PublicExpress {
+export declare class FilenPublicExpress {
     readonly server: Express;
     readonly serverConfig: ServerConfig;
     readonly user: User;
@@ -33,7 +33,7 @@ export declare class F3PublicExpress {
     connections: Record<string, Socket | Duplex>;
     rateLimit: RateLimit;
     logger: Logger;
-    config: F3PublicServerConfig;
+    config: FilenPublicServerConfig;
     corsBucketCache: Map<string, {
         entries: CorsEntry[];
         expiresAt: number;
@@ -47,7 +47,7 @@ export declare class F3PublicExpress {
         };
         rateLimit?: RateLimit;
         disableLogging?: boolean;
-        config?: Partial<F3PublicServerConfig>;
+        config?: Partial<FilenPublicServerConfig>;
         corsOptions?: any;
         enabledRoutes?: Record<string, unknown>;
     });
@@ -65,5 +65,5 @@ export declare class F3PublicExpress {
     start(): Promise<void>;
     stop(terminate?: boolean): Promise<void>;
 }
-export type Server = F3PublicExpress;
+export type Server = FilenPublicExpress;
 export {};

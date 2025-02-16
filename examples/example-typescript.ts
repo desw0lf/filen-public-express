@@ -1,4 +1,4 @@
-import { F3PublicExpress } from "../src/index.ts";
+import { FilenPublicExpress } from "../src/index.ts";
 
 const { FILEN_EMAIL, FILEN_PASSWORD } = process.env as Record<string, string>;
 
@@ -7,8 +7,8 @@ const credentials = {
   password: FILEN_PASSWORD,
 };
 
-const server = new F3PublicExpress({
-  user: { sdkConfig: credentials },
+const server = new FilenPublicExpress({
+  user: { sdkConfig: { ...credentials } },
   config: {}
 });
 

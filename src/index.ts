@@ -31,7 +31,7 @@ const defaultCorsOptions = {
 
 const defaultConfig = {
   expressTrustProxy: false,
-  corsBucketFileName: ".f3-public.json",
+  corsBucketFileName: ".filen-public.json",
   corsBucketCacheTTLMinutes: 10,
   downloadFileParam: "dl"
 };
@@ -45,7 +45,7 @@ export type User = PartialBy<OriginalUser, "secretKeyId" | "accessKeyId">;
 
 export type IgnoreRule  = string | { startsWith?: string; endsWith: string; contains: string };
 
-export type F3PublicServerConfig = {
+export type FilenPublicServerConfig = {
   expressTrustProxy?: boolean | number | string | string[]; // https://express-rate-limit.mintlify.app/guides/troubleshooting-proxy-issues
   corsBucketFileName: string;
   corsBucketCacheTTLMinutes: number;
@@ -55,7 +55,7 @@ export type F3PublicServerConfig = {
   ignoreList?: IgnoreRule[];
 };
 
-export class F3PublicExpress {
+export class FilenPublicExpress {
   public readonly server: Express;
   public readonly serverConfig: ServerConfig;
   public readonly user: User;
@@ -64,7 +64,7 @@ export class F3PublicExpress {
   public connections: Record<string, Socket | Duplex> = {};
   public rateLimit: RateLimit;
   public logger: Logger;
-  public config: F3PublicServerConfig;
+  public config: FilenPublicServerConfig;
   public corsBucketCache = new Map<string, { entries: CorsEntry[]; expiresAt: number }>();
 
   public constructor({
@@ -91,7 +91,7 @@ export class F3PublicExpress {
     user: User & { sdkConfig?: FilenSDKConfig }
     rateLimit?: RateLimit
     disableLogging?: boolean
-    config?: Partial<F3PublicServerConfig>
+    config?: Partial<FilenPublicServerConfig>
     corsOptions?: any;
     enabledRoutes?: Record<string, unknown>
   }) {
@@ -198,7 +198,7 @@ export class F3PublicExpress {
           this.serverInstance.timeout = 86400000 * 7;
           this.serverInstance.keepAliveTimeout = 86400000 * 7;
           this.serverInstance.headersTimeout = 86400000 * 7 * 2;
-          const msg = `F3 Public Express Server started on ${protocol}://${this.serverConfig.hostname}:${this.serverConfig.port}`;
+          const msg = `Filen Public Express Server started on ${protocol}://${this.serverConfig.hostname}:${this.serverConfig.port}`;
           console.log(msg);
           this.logger.log("info", msg);
           resolve();
@@ -265,4 +265,4 @@ export class F3PublicExpress {
   }
 }
 
-export type Server = F3PublicExpress;
+export type Server = FilenPublicExpress;
