@@ -10,6 +10,11 @@ type RequiredBy<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type FilenSDKConfig = RequiredBy<OriginalFilenSDKConfig, "email" | "password">;
 export type User = PartialBy<OriginalUser, "secretKeyId" | "accessKeyId">;
+export type IgnoreRule = string | {
+    startsWith?: string;
+    endsWith: string;
+    contains: string;
+};
 export type F3PublicServerConfig = {
     expressTrustProxy?: boolean | number | string | string[];
     corsBucketFileName: string;
@@ -17,6 +22,7 @@ export type F3PublicServerConfig = {
     corsBucketCachePurgeUrl?: string;
     masterBucket?: string;
     downloadFileParam?: string | null | false;
+    ignoreList?: IgnoreRule[];
 };
 export declare class F3PublicExpress {
     readonly server: Express;

@@ -43,6 +43,8 @@ export type FilenSDKConfig = RequiredBy<OriginalFilenSDKConfig, "email" | "passw
 
 export type User = PartialBy<OriginalUser, "secretKeyId" | "accessKeyId">;
 
+export type IgnoreRule  = string | { startsWith?: string; endsWith: string; contains: string };
+
 export type F3PublicServerConfig = {
   expressTrustProxy?: boolean | number | string | string[]; // https://express-rate-limit.mintlify.app/guides/troubleshooting-proxy-issues
   corsBucketFileName: string;
@@ -50,7 +52,7 @@ export type F3PublicServerConfig = {
   corsBucketCachePurgeUrl?: string;
   masterBucket?: string; // name of the single bucket to use
   downloadFileParam?: string | null | false; // e.g. "dl", used as query param ".../file.pdf?dl=1" or ".../file.pdf?dl=true"
-  // ignoreDotFiles?: boolean; // todo
+  ignoreList?: IgnoreRule[];
 };
 
 export class F3PublicExpress {
