@@ -198,7 +198,9 @@ export class F3PublicExpress {
           this.serverInstance.timeout = 86400000 * 7;
           this.serverInstance.keepAliveTimeout = 86400000 * 7;
           this.serverInstance.headersTimeout = 86400000 * 7 * 2;
-          console.log(`F3 Public Express Server started on ${protocol}://${this.serverConfig.hostname}:${this.serverConfig.port}`);
+          const msg = `F3 Public Express Server started on ${protocol}://${this.serverConfig.hostname}:${this.serverConfig.port}`;
+          console.log(msg);
+          this.logger.log("info", msg);
           resolve();
         })
         .on("connection", (socket) => {
