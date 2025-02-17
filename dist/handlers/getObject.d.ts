@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from "express";
 import { GetObject } from "@filen/s3/dist/handlers/getObject.js";
-import { type Server } from "../index.ts";
+import { type Server } from "../server.ts";
 export declare class EnhancedGetObject extends GetObject {
     constructor(server: Server);
     private isFileIgnored;

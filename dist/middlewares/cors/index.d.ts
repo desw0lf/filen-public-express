@@ -1,4 +1,3 @@
-import { type Server } from "../../index.ts";
-type CorsOptions = Record<string, any>;
+import { type Server } from "../../server.ts";
+import { type CorsOptions } from "../../types.ts";
 export declare const createCorsMiddleware: (server: Server, defaultOptions: CorsOptions) => any;
-export {};

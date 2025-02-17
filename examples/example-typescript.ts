@@ -1,4 +1,4 @@
-import { FilenPublicExpress } from "../src/index.ts";
+import { FilenPublicExpress, Logger } from "../src/index.ts";
 
 const { FILEN_EMAIL, FILEN_PASSWORD } = process.env as Record<string, string>;
 
@@ -9,7 +9,7 @@ const credentials = {
 
 const server = new FilenPublicExpress({
   user: { sdkConfig: { ...credentials } },
-  config: {}
+  logger: { instance: Logger }
 });
 
 await server.start();

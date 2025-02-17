@@ -2,7 +2,8 @@ import { type Request, type Response, type NextFunction } from "express";
 import { GetObject } from "@filen/s3/dist/handlers/getObject.js";
 import { getBucketName } from "../utils/get-bucket-name.ts";
 import { createError } from "../utils/error.ts";
-import { type Server, type FilenPublicServerConfig, type IgnoreRule } from "../index.ts";
+import { type Server } from "../server.ts";
+import { type FilenPublicServerConfig, type IgnoreRule } from "../types.ts";
 
 export class EnhancedGetObject extends GetObject {
   public constructor(server: Server) {

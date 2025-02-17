@@ -2,7 +2,8 @@ import {} from "express";
 import { GetObject } from "@filen/s3/dist/handlers/getObject.js";
 import { getBucketName } from "../utils/get-bucket-name.js";
 import { createError } from "../utils/error.js";
-import {} from "../index.js";
+import {} from "../server.js";
+import {} from "../types.js";
 export class EnhancedGetObject extends GetObject {
     constructor(server) {
         super(server);

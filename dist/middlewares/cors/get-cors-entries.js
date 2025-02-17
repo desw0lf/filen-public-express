@@ -1,6 +1,7 @@
 import { isArray, isArrayOfType, isObject } from "../../utils/is-type.js";
 import { parseJSON } from "../../utils/parse-json.js";
-import {} from "../../index.js";
+import {} from "../../server.js";
+import {} from "../../types.js";
 async function readCorsFile(sdk, path) {
     try {
         const content = await sdk.fs().readFile({ path });

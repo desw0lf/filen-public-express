@@ -1,11 +1,7 @@
 import { isArray, isArrayOfType, isObject } from "../../utils/is-type.ts";
 import { parseJSON } from "../../utils/parse-json.ts";
-import { type Server } from "../../index.ts";
-
-export interface CorsEntry {
-  AllowedMethods: string[]; // ["GET"]
-  AllowedOrigins: string[];
-}
+import { type Server } from "../../server.ts";
+import { type CorsEntry } from "../../types.ts";
 
 async function readCorsFile(sdk: Server["sdk"], path: string): Promise<string> {
   try {

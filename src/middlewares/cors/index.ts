@@ -1,13 +1,10 @@
 import cors from "cors";
 import { getBucketName } from "../../utils/get-bucket-name.ts";
-import { readAndParseCorsEntries, findCorsEntryByMethod, parseOriginList, type CorsEntry } from "./get-cors-entries.ts";
-import { type Request } from "express";
-import { type Server } from "../../index.ts";
+import { readAndParseCorsEntries, findCorsEntryByMethod, parseOriginList } from "./get-cors-entries.ts";
 import { createError, type ErrorWithStatus } from "../../utils/error.ts";
-
-
-type CorsOptions = Record<string, any>;
-
+import { type Request } from "express";
+import { type Server } from "../../server.ts";
+import { type CorsEntry, type CorsOptions } from "../../types.ts";
 
 async function getCorsEntries(sdk: Server["sdk"], path: string, cacheEntry: ReturnType<Server["corsBucketCache"]["get"]>, method: string, now: number): Promise<{ hit: boolean; entries: CorsEntry[] }> {
   if (cacheEntry && cacheEntry.expiresAt > now) {
