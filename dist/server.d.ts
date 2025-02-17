@@ -28,7 +28,7 @@ export declare class FilenPublicExpress {
             sdkConfig?: FilenSDKConfig;
         };
         rateLimit?: RateLimit;
-        logger: Partial<LoggerOptions> & {
+        logger?: Partial<LoggerOptions> & {
             instance?: typeof Logger;
         };
         config?: Partial<FilenPublicServerConfig>;

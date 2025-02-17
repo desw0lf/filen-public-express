@@ -16,7 +16,7 @@ export const defaultConfig: FilenPublicServerConfig = {
 
 export const defaultLoggerOptions: LoggerOptions = {
   level: "info",
-  logsPath: "./logs/filen-public-server",
+  logsPath: "./log/filen-public-server",
   size: "10M",
   interval: "7d",
   compress: "gzip",
