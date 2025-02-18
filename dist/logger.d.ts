@@ -5,6 +5,7 @@ export declare const getRequestLog: (req: Request) => {
     path: string;
     origin: string;
     referer: string;
+    userAgent: string;
 };
 export declare class Logger {
     private logger;

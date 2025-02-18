@@ -134,7 +134,7 @@ export class FilenPublicExpress {
 		this.server.disable("x-powered-by");
     if (!disableLogging) {
       this.server.use(async (req: Request, _res: Response, next: NextFunction) => {
-        await this.logger.log("info", { msg: "", req: getRequestLog(req) });
+        await this.logger.log("info", { msg: `Request - ${req.path}`, req: getRequestLog(req) });
         next();
       });
     }

@@ -11,6 +11,7 @@ export const getRequestLog = (req) => ({
     path: req.path,
     origin: req.headers["origin"],
     referer: req.headers["referer"],
+    userAgent: req.headers["user-agent"],
 });
 export class Logger {
     logger = null;
