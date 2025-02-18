@@ -1,7 +1,7 @@
 import { type Request } from "express";
 import { type LogLevel, type LoggerOptions } from "./types.ts";
 export declare const getRequestLog: (req: Request) => {
-    ip: string | string[];
+    ip: string;
     path: string;
     origin: string;
     referer: string;

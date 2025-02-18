@@ -3,10 +3,11 @@ import { pino } from "pino";
 import fs from "fs-extra";
 import { createStream } from "rotating-file-stream";
 import { isObject } from "./utils/is-type.js";
+import { getIp } from "./utils/get-ip.js";
 import {} from "express";
 import {} from "./types.js";
 export const getRequestLog = (req) => ({
-    ip: req.ip || req.headers["x-forwarded-for"] || req.headers["cf-connecting-ip"] || "?",
+    ip: getIp(req) || "?",
     path: req.path,
     origin: req.headers["origin"],
     referer: req.headers["referer"],

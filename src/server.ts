@@ -15,6 +15,7 @@ import { errors } from "./middlewares/errors.ts";
 import { createError } from "./utils/error.ts";
 import middlewareBody from "@filen/s3/dist/middlewares/body.js";
 import { defaultPort, defaultCorsOptions, defaultConfig, defaultLoggerOptions } from "./consts.ts";
+import { getIp } from "./utils/get-ip.ts";
 // ? TYPES:
 import type { ServerConfig, RateLimit } from "@filen/s3";
 import { type Socket } from "net";
@@ -142,7 +143,8 @@ export class FilenPublicExpress {
       windowMs: this.rateLimit.windowMs,
       limit: this.rateLimit.limit,
       standardHeaders: "draft-7",
-      legacyHeaders: true
+      legacyHeaders: true,
+      keyGenerator: (req) => getIp(req)
 		}));
     this.server.use(body as any);
     // enabled.HeadObject && this.server.head("/:bucket/:key*", new HeadObject(this).handle);

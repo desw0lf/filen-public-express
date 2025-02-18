@@ -3,11 +3,12 @@ import { pino, type Logger as PinoLogger } from "pino";
 import fs from "fs-extra";
 import { createStream } from "rotating-file-stream";
 import { isObject } from "./utils/is-type.ts";
+import { getIp } from "./utils/get-ip.ts";
 import { type Request } from "express";
 import { type LogLevel, type LoggerOptions } from "./types.ts";
 
 export const getRequestLog = (req: Request) => ({
-  ip: req.ip || req.headers["x-forwarded-for"] || req.headers["cf-connecting-ip"] || "?",
+  ip: getIp(req) || "?",
   path: req.path,
   origin: req.headers["origin"],
   referer: req.headers["referer"],
