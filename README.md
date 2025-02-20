@@ -105,10 +105,10 @@ You should now be able to access the files in your public buckets in your browse
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `downloadFileParam` | `string \| null \| undefined \| false` | `"dl"` | <a name="f4"></a>Used as query param (e.g. `.../file.pdf?dl=1`) that allows downloading files instead of displaying them inline |
-| `masterBucket` | `string \| undefined` | - | <a name="f1"></a>Name of the singular bucket that the server will expose publicly _(setting this value will remove the ability for the server to expose other buckets)_ |
-| `ignoreList` | `IgnoreRule[]` | - | <a name="f5"></a>List of ignore rules for files/keys (e.g. `["secret.json", { endsWith: ".key" }]`) |
-| `corsBucketFileName` | `string \| undefined` | `.filen-public.json` | <a name="f2"></a>Name for individual JSON CORS configurations inside the bucket |
+| `downloadFileParam` | `string \| null \| undefined \| false` | `"dl"` | <a name="f4"></a><sup>4</sup>Used as query param (e.g. `.../file.pdf?dl=1`) that allows downloading files instead of displaying them inline |
+| `masterBucket` | `string \| undefined` | - | <a name="f1"></a><sup>1</sup>Name of the singular bucket that the server will expose publicly _(setting this value will remove the ability for the server to expose other buckets)_ |
+| `ignoreList` | `IgnoreRule[]` | - | <a name="f5"></a><sup>5</sup>List of ignore rules for files/keys (e.g. `["secret.json", { endsWith: ".key" }]`) |
+| `corsBucketFileName` | `string \| undefined` | `.filen-public.json` | <a name="f2"></a><sup>2</sup>Name for individual JSON CORS configurations inside the bucket |
 | `corsBucketCacheTTLMinutes` | `number \| undefined` | `10` | Cache duration for CORS configurations |
 | `corsBucketCachePurgeUrl` | `string \| undefined` | - | URL to purge CORS cache (e.g. `"/purge-cors-cache"`) |
 | `expressTrustProxy` | `boolean \| number \| string \| string[]` | `false` | Express.js trust proxy setting |
@@ -124,7 +124,7 @@ You should now be able to access the files in your public buckets in your browse
 
 ### `.filen-public.json` Configuration
 <a name="f3"></a>
-Place this [file](./examples/.filen-public.json) inside your bucket to configure CORS settings:
+<sup>3</sup>Place this [file](./examples/.filen-public.json) inside your bucket to configure CORS settings:
 
 ```json
 [
