@@ -1,7 +1,6 @@
 import {} from "express";
 import { Responses } from "@filen/s3/dist/responses.js";
 import { getRequestLog } from "../logger.js";
-import {} from "../logger.js";
 export const errors = (logger) => async (err, req, res, _next) => {
     if (!err) {
         return;

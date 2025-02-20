@@ -5,7 +5,7 @@ import os from "os";
 import { v4 as uuidv4 } from "uuid";
 import { FilenSDK } from "@filen/sdk";
 import http, {} from "http";
-import { getRequestLog, Logger } from "./logger.js";
+import { getRequestLog } from "./logger.js";
 // import HeadObject from "./handlers/headObject.ts";
 import GetObject from "./handlers/getObject.js";
 import { normalizeKey } from "@filen/s3/dist/utils.js";
@@ -41,7 +41,12 @@ export class FilenPublicExpress {
         this.serverConfig = { hostname, port, https };
         this.rateLimit = rateLimit;
         const loggerOptions = { ...defaultLoggerOptions, ...customLoggerOptions };
-        this.logger = instance ? new instance(loggerOptions) : { log: () => { } };
+        if (typeof instance === "function") {
+            this.logger = new instance(loggerOptions);
+        }
+        else {
+            this.logger = instance ?? { log: async () => { } };
+        }
         this.config = { ...defaultConfig, ...config };
         this.updateCorsCache = this.updateCorsCache.bind(this);
         if (user.sdk) {

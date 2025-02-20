@@ -5,7 +5,7 @@ import os from "os";
 import { v4 as uuidv4 } from "uuid";
 import { FilenSDK, type SocketEvent, type FSStats } from "@filen/sdk";
 import http, { type IncomingMessage, type ServerResponse } from "http";
-import { getRequestLog, Logger } from "./logger.ts";
+import { getRequestLog, type LoggerInstance, type LoggerWithInstance } from "./logger.ts";
 // import HeadObject from "./handlers/headObject.ts";
 import GetObject from "./handlers/getObject.ts";
 import { normalizeKey } from "@filen/s3/dist/utils.js";
@@ -20,7 +20,7 @@ import { getIp } from "./utils/get-ip.ts";
 import type { ServerConfig, RateLimit } from "@filen/s3";
 import { type Socket } from "net";
 import { type Duplex } from "stream";
-import type { FilenPublicServerConfig, User, FilenSDKConfig, CorsEntry, LoggerOptions } from "./types.ts";
+import type { FilenPublicServerConfig, User, FilenSDKConfig, CorsEntry, LoggerOptions, PartialBy, CorsOptions } from "./types.ts";
 
 const body = (middlewareBody as any).default as typeof middlewareBody;
 
@@ -32,7 +32,7 @@ export class FilenPublicExpress {
   public serverInstance: http.Server<typeof IncomingMessage, typeof ServerResponse> = null as any;
   public connections: Record<string, Socket | Duplex> = {};
   public rateLimit: RateLimit;
-  public logger: Logger;
+  public logger: LoggerInstance;
   public config: FilenPublicServerConfig;
   public corsBucketCache = new Map<string, { entries: CorsEntry[]; expiresAt: number }>();
 
@@ -59,15 +59,19 @@ export class FilenPublicExpress {
     https?: boolean
     user: User & { sdkConfig?: FilenSDKConfig }
     rateLimit?: RateLimit
-    logger?: Partial<LoggerOptions> & { instance?: typeof Logger }
+    logger?: LoggerWithInstance;
     config?: Partial<FilenPublicServerConfig>
-    corsOptions?: any;
+    corsOptions?: CorsOptions;
     enabledRoutes?: Record<string, unknown>
   }) {
     this.serverConfig = { hostname, port, https };
     this.rateLimit = rateLimit;
     const loggerOptions = { ...defaultLoggerOptions, ...customLoggerOptions };
-    this.logger = instance ? new instance(loggerOptions) : { log: () => {} } as unknown as Logger;
+    if (typeof instance === "function") {
+      this.logger = new instance(loggerOptions);
+    } else {
+      this.logger = instance ?? { log: async () => {} };
+    }
     this.config = { ...defaultConfig, ...config };
     this.updateCorsCache = this.updateCorsCache.bind(this);
 
@@ -128,7 +132,7 @@ export class FilenPublicExpress {
     return size;
   }
 
-  private initializeRoutes(enabled: Record<string, unknown>, corsOptions: any, disableLogging: boolean): void {
+  private initializeRoutes(enabled: Record<string, unknown>, corsOptions: CorsOptions, disableLogging: boolean): void {
     this.connections = {};
 
 		this.server.disable("x-powered-by");

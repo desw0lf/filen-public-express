@@ -37,7 +37,7 @@ export const createCorsMiddleware = (server: Server, defaultOptions: CorsOptions
     return findCorsEntryByMethod(entries, req.method);
   }
 
-  return cors(async (req: Request, callback: (error: ErrorWithStatus | null, options?: CorsOptions) => void) => {
+  return cors(async (req: Request, callback: (error: ErrorWithStatus | null, options?: Record<string, any>) => void) => {
       try {
         const bucket = getBucketName({ params: { bucket: req.path.split("/")[1] || "" }} as any, config);
         const { AllowedOrigins } = bucket === "public_" ? { AllowedOrigins: ["*"] } : await findCorsEntry(req, bucket);
@@ -45,7 +45,7 @@ export const createCorsMiddleware = (server: Server, defaultOptions: CorsOptions
 
         const referer = req.headers.referer ? new URL(req.headers.referer).origin : null;
 
-        const corsOptions: CorsOptions = {
+        const corsOptions: Record<string, any> = {
           ...defaultOptions,
           origin: (origin: string | null | undefined, cb: (err: Error | null, origin?: boolean) => void) => {
             if (isAllowed(allowedOrigins, { origin, referer })) {

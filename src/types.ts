@@ -2,13 +2,13 @@ import type { User as OriginalUser } from "@filen/s3";
 import { type FilenSDKConfig as OriginalFilenSDKConfig } from "@filen/sdk";
 
 type RequiredBy<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
-type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 export type FilenSDKConfig = RequiredBy<OriginalFilenSDKConfig, "email" | "password">;
 
 export type User = PartialBy<OriginalUser, "secretKeyId" | "accessKeyId">;
 
-export type IgnoreRule  = string | { startsWith?: string; endsWith: string; contains: string };
+export type IgnoreRule  = string | { startsWith?: string; endsWith?: string; contains?: string };
 
 export type FilenPublicServerConfig = {
   expressTrustProxy?: boolean | number | string | string[]; // https://express-rate-limit.mintlify.app/guides/troubleshooting-proxy-issues
@@ -20,12 +20,17 @@ export type FilenPublicServerConfig = {
   ignoreList?: IgnoreRule[];
 };
 
+export type Method = string;
+
 export interface CorsEntry {
-  AllowedMethods: string[]; // ["GET"]
+  AllowedMethods: [Method]; // ("GET" | "PUT" | "POST" | "DELETE" | "HEAD")[]; // only ["GET"] supported
   AllowedOrigins: string[];
 }
 
-export type CorsOptions = Record<string, any>;
+export interface CorsOptions {
+  methods: "GET";
+  origin: string | string[];
+}
 
 // logger
 

@@ -15,3 +15,8 @@ export declare class Logger {
     private initLogger;
     log(level: LogLevel, msg?: unknown, where?: string): Promise<void>;
 }
+export type LoggerConstructor = new (options: LoggerOptions) => Logger;
+export type LoggerInstance = Logger | Pick<Logger, "log">;
+export type LoggerWithInstance = Partial<LoggerOptions> & {
+    instance?: LoggerConstructor | LoggerInstance;
+};

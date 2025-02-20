@@ -5,7 +5,7 @@ import { createStream } from "rotating-file-stream";
 import { isObject } from "./utils/is-type.ts";
 import { getIp } from "./utils/get-ip.ts";
 import { type Request } from "express";
-import { type LogLevel, type LoggerOptions } from "./types.ts";
+import { type LogLevel, type LoggerOptions, type PartialBy } from "./types.ts";
 
 export const getRequestLog = (req: Request) => ({
   ip: getIp(req) || "?",
@@ -68,3 +68,9 @@ export class Logger {
     });
   }
 }
+export type LoggerConstructor = new (options: LoggerOptions) => Logger;
+export type LoggerInstance = Logger | Pick<Logger, "log">;
+
+export type LoggerWithInstance = Partial<LoggerOptions> & {
+  instance?: LoggerConstructor | LoggerInstance;
+};

@@ -1,11 +1,11 @@
 import { type Express } from "express";
 import { FilenSDK, type FSStats } from "@filen/sdk";
 import http, { type IncomingMessage, type ServerResponse } from "http";
-import { Logger } from "./logger.ts";
+import { type LoggerInstance, type LoggerWithInstance } from "./logger.ts";
 import type { ServerConfig, RateLimit } from "@filen/s3";
 import { type Socket } from "net";
 import { type Duplex } from "stream";
-import type { FilenPublicServerConfig, User, FilenSDKConfig, CorsEntry, LoggerOptions } from "./types.ts";
+import type { FilenPublicServerConfig, User, FilenSDKConfig, CorsEntry, CorsOptions } from "./types.ts";
 export declare class FilenPublicExpress {
     readonly server: Express;
     readonly serverConfig: ServerConfig;
@@ -14,7 +14,7 @@ export declare class FilenPublicExpress {
     serverInstance: http.Server<typeof IncomingMessage, typeof ServerResponse>;
     connections: Record<string, Socket | Duplex>;
     rateLimit: RateLimit;
-    logger: Logger;
+    logger: LoggerInstance;
     config: FilenPublicServerConfig;
     corsBucketCache: Map<string, {
         entries: CorsEntry[];
@@ -28,11 +28,9 @@ export declare class FilenPublicExpress {
             sdkConfig?: FilenSDKConfig;
         };
         rateLimit?: RateLimit;
-        logger?: Partial<LoggerOptions> & {
-            instance?: typeof Logger;
-        };
+        logger?: LoggerWithInstance;
         config?: Partial<FilenPublicServerConfig>;
-        corsOptions?: any;
+        corsOptions?: CorsOptions;
         enabledRoutes?: Record<string, unknown>;
     });
     private get isLoggedIn();

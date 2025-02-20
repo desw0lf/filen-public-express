@@ -7,8 +7,7 @@
   "scripts": {
     "tsc": "tsc --build",
     "build": "npm run tsc",
-    "start-example": "node examples/example.js",
-    "start-example-ts": "node examples/example-typescript.ts"
+    "start-example": "node examples/basic-typescript.ts"
   },
   "engines": {
     "node": ">=22.6.0"

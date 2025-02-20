@@ -1,10 +1,9 @@
 import { type Response, type Request, type NextFunction } from "express";
 import { Responses } from "@filen/s3/dist/responses.js";
-import { getRequestLog } from "../logger.ts";
+import { getRequestLog, type LoggerInstance } from "../logger.ts";
 import type { ErrorWithStatus } from "../utils/error.ts";
-import { type Logger } from "../logger.ts";
 
-export const errors = (logger: Logger) => async (err: ErrorWithStatus, req: Request, res: Response, _next: NextFunction) => {
+export const errors = (logger: LoggerInstance) => async (err: ErrorWithStatus, req: Request, res: Response, _next: NextFunction) => {
   if (!err) {
     return;
   }

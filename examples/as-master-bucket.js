@@ -1,4 +1,4 @@
-import { FilenPublicExpress, Logger } from "../dist/index.js";
+import { FilenPublicExpress } from "filen-public-express";
 
 const { FILEN_EMAIL, FILEN_PASSWORD } = process.env;
 
@@ -9,7 +9,13 @@ const credentials = {
 
 const server = new FilenPublicExpress({
   user: { sdkConfig: credentials },
-  logger: { instance: Logger }
+  config: {
+    masterBucket: "public_myimages"
+  },
+  corsOptions: {
+    methods: "GET",
+    origin: "https://myimages.eu.net",
+  }
 });
 
 await server.start();
