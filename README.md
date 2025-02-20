@@ -1,5 +1,5 @@
 <div>
-  <a href="#"><img src="https://github.com/user-attachments/assets/6d488b34-9841-4cc1-842f-ebf99bc57c08" align="right" width="40%"/></a>
+  <a href="#"><img src="https://github.com/user-attachments/assets/8e713a4e-5048-4921-b3d3-8a7ada1fe231" align="right" width="40%"/></a>
   <div>
     <h3>Filen Public Express</h3>
     <p>
