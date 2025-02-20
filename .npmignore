@@ -27,3 +27,7 @@ tsconfig.test.json
 .gitignore
 .travis.yml
 rollup.config.js
+
+tmp
+tsconfig.tsbuildinfo
+.gitattributes
