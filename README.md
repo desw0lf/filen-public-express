@@ -45,10 +45,10 @@ A lightweight, unofficial static file server powered by the Filen.io SDK. Design
 
 ## 👾 Features
 
-- Serve files from either **all** public buckets — or via one specific master bucket<sup>[1](#f1)</sup>
-- Supports server-wide CORS configuration, and JSON CORS configurations<sup>[2](#f2)</sup><sup>[3](#f3)</sup> inside each bucket - mimics [AWS S3 CORS configuration](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html) structure ([example](./examples/.filen-public.json))
-- Supports file downloads<sup>[4](#f4)</sup> via search parameters in **GET** requests (e.g. `.../file.jpg?dl=1`)
-- Supports file ignores<sup>[5](#f5)</sup> (e.g. `["secret.json", { endsWith: ".key" }]`)
+- Serve files from either **all** public buckets — or via one specific master bucket<sup>[1](#config-options)</sup>
+- Supports server-wide CORS configuration, and JSON CORS configurations<sup>[2](#config-options)</sup><sup>[3](#filen-publicjson-configuration)</sup> inside each bucket - mimics [AWS S3 CORS configuration](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html) structure ([example](./examples/.filen-public.json))
+- Supports file downloads<sup>[4](#config-options)</sup> via search parameters in **GET** requests (e.g. `.../file.jpg?dl=1`)
+- Supports file ignores<sup>[5](#config-options)</sup> (e.g. `["secret.json", { endsWith: ".key" }]`)
 
 ## 🚀 Getting Started
 
