@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.js",
   "type": "module",
+  "homepage": "https://github.com/desw0lf/filen-public-express#readme",
   "scripts": {
     "tsc": "tsc --build",
     "build": "npm run tsc",
