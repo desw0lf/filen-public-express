@@ -5,3 +5,4 @@ tmp
 !.vscode/settings.SAMPLE.json
 tsconfig.tsbuildinfo
 /log
+/dist
