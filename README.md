@@ -138,7 +138,8 @@ You should now be able to access the files in your public buckets in your browse
 ![Bucket File Configuration](https://github.com/user-attachments/assets/df93ff0a-be46-443b-b46c-d032ec0e4c28)
 
 > [!IMPORTANT]
-> Must be an array, only `"GET"` method supported, origin `"*"` is used to allow. Mimics [AWS S3 CORS configuration](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html) structure.
+> Must be an array, only `"GET"` method supported, origin `"*"` is used to allow all.
+> Mimics [AWS S3 CORS configuration](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html) structure.
 
 ## ⌨️ Examples
 

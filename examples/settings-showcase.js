@@ -31,6 +31,10 @@ const server = new FilenPublicExpress({
   corsOptions: {
     methods: "GET",
     origin: "https://google.com,https://example.com",
+  },
+  rateLimit: {
+    windowMs: 1200,
+    limit: 1400
   }
 });
 
