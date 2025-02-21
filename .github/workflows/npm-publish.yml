@@ -66,14 +66,12 @@ jobs:
           name: npm-package
           path: .
 
+      - name: Zip artifact for release
+        run: zip release.zip ./* -r
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2.2.1
         with:
           token: ${{ secrets.GH_TOKEN }}
           body_path: CHANGELOG.md
-          files: |
-            dist/**
-            README.md
-            package.json
-            NOTICE
-            LICENSE
+          files: release.zip
