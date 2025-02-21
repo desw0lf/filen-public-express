@@ -94,7 +94,7 @@ node server.js
 ```
 
 You should now be able to access the files in your public buckets in your browser.
-(e.g. `https://localhost:1700/myimages/mydog.jpg`)
+(e.g. `http://localhost:1700/myimages/mydog.jpg`)
 
 > [!NOTE]
 > Only files in public buckets (with `public_` prefix) can be accessed. (e.g. `public_myimages`) The prefix is omitted in the URL pathname.

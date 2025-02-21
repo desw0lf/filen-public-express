@@ -31,3 +31,4 @@ rollup.config.js
 tmp
 tsconfig.tsbuildinfo
 .gitattributes
+CHANGELOG.md
