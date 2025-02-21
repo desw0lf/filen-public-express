@@ -1,4 +1,3 @@
-# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 name: Publish to NPM + Create GitHub Release
 
 on:
@@ -21,6 +20,18 @@ jobs:
       - run: npm run build
       # - run: npm test
 
+      # Upload only the required files (dist/, README.md, package.json)
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-package
+          path: |
+            dist/
+            README.md
+            package.json
+            NOTICE
+            LICENSE
+
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
@@ -30,6 +41,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VER }}
           registry-url: https://registry.npmjs.org/
+
+      # Download the build artifact (only contains required files)
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: npm-package
+
+      # Publish package to NPM
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
@@ -37,13 +56,25 @@ jobs:
   publish-release:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required for GitHub release
+
     steps:
       - uses: actions/checkout@v4
+
+      # Download the build artifact (already filtered)
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: npm-package
+
+      # Create GitHub Release (no need to specify files again)
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: ${{ github.ref }}
           name: Release ${{ github.ref }}
           body_path: CHANGELOG.md
+          files: npm-package/**  # Uploads everything in the artifact
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
