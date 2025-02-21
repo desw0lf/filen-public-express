@@ -32,3 +32,4 @@ tmp
 tsconfig.tsbuildinfo
 .gitattributes
 CHANGELOG.md
+.github

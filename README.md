@@ -1,3 +1,4 @@
+<blockquote>
 <div>
   <a href="#"><img src="https://github.com/user-attachments/assets/8e713a4e-5048-4921-b3d3-8a7ada1fe231" align="right" width="40%"/></a>
   <div>
@@ -9,15 +10,16 @@
 
 [![NPM](https://img.shields.io/npm/v/filen-public-express.svg?style=flat-square)](https://www.npmjs.com/package/filen-public-express) [![lang](https://img.shields.io/github/languages/top/desw0lf/filen-public-express?style=flat-square&color=b141e1&logo=typescript)](#) [![license](https://img.shields.io/github/license/desw0lf/filen-public-express?style=flat-square&logo=opensourceinitiative&logoColor=white&color=b141e1)](./LICENSE)
     </p>
-    <p>
+    <p style="background-color: #FF474C;">
       <span><a href="#">
-        <img src="https://github.com/user-attachments/assets/e0609bbb-82c3-4118-8d84-fe9a7d4d7272" alt="filen" style="width: 120px;"></a></span>
+        <img src="https://github.com/user-attachments/assets/e0609bbb-82c3-4118-8d84-fe9a7d4d7272" alt="filen" width="120"></a></span>
       <span>&nbsp;&nbsp;&nbsp;</span>
       <span><a href="#">
-        <img src="https://github.com/user-attachments/assets/4c7bfea5-261a-4629-af20-ffef39d4e190" alt="express" style="width: 140px;"></a></span>
+        <img src="https://github.com/user-attachments/assets/4c7bfea5-261a-4629-af20-ffef39d4e190" alt="express" width="140"></a></span>
     </p>
   </div>
 </div>
+</blockquote>
 <br clear="left"/>
 <br clear="right"/>
 <br /><br />
