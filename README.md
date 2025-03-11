@@ -36,6 +36,7 @@
   - [`corsOptions`](#corsoptions)
   - [`.filen-public.json` Configuration](#filen-publicjson-configuration)
 - [⌨️ Examples](#️-examples)
+- [🛠️ Troubleshooting](#️-troubleshooting)
 - [❕ Disclaimer](#-disclaimer)
 - [🎗 License](#-license)
 - [🙌 Acknowledgments](#-acknowledgments)
@@ -145,6 +146,20 @@ You should now be able to access the files in your public buckets in your browse
 ## ⌨️ Examples
 
 Examples can be found in the [examples](./examples) folder.
+
+## 🛠️ Troubleshooting
+
+### `.mp4` not playing inline/directly on iPhone/iPad browsers when using Cloudflare CDN
+If you're serving `.mp4` files through Cloudflare and they are not playing inline in iOS browsers, this is likely due to Cloudflare's caching or compression settings. Follow these steps to bypass `.mp4` Cloudflare cache for User Agents that include iPhone/iPad:
+
+1. Go to **Rules** > **Cache Rules**.
+2. Add the following condition:
+```
+(http.user_agent contains "iPad" or http.user_agent contains "iPhone") and (http.request.uri.path.extension in {"mp4"})
+```
+3. Set the action to "Bypass Cache".
+
+([visual config example](https://github.com/user-attachments/assets/753b4b41-b270-472f-8583-82f791bfaac5))
 
 ## ❕ Disclaimer
 
