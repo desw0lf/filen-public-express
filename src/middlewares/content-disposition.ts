@@ -29,9 +29,9 @@ export const contentDispositionMiddleware = (downloadFileParam: string | undefin
     // in case Content-Length is stripped (e.g. by cloudflare compression)
     res.setHeader("X-Decompressed-Content-Length", headers["Content-Length"]);
     // don't compress .mp4 for iOS, as it breaks the ability to be played inline directly in browser (e.g. fixes cloudflare .mp4 not playing in iOS browsers)
-    const reqHeaders = getStringHeaders(req, ["User-Agent"]);
-    if (["video/mp4"].includes(mime) && (reqHeaders["User-Agent"].includes("iPhone") || reqHeaders["User-Agent"].includes("iPad"))) {
-      res.setHeader("Content-Encoding", "identity");
-    }
+    // const reqHeaders = getStringHeaders(req, ["User-Agent"]);
+    // if (["video/mp4"].includes(mime) && (reqHeaders["User-Agent"].includes("iPhone") || reqHeaders["User-Agent"].includes("iPad") || reqHeaders["User-Agent"].includes("Mac"))) {
+    //   res.setHeader("Content-Encoding", "identity");
+    // }
   }
 };
