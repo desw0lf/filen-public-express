@@ -1,1 +1,3 @@
-- initial release
+- added support for `.mkv` files to be played inline directly in the browser.
+- fixed an issue where compressed (via web server or Cloudflare caching) `.mp4` files were not playing inline in iOS browsers. Compression is now disabled for `.mp4` files on iOS devices.
+- added the `X-Decompressed-Content-Length` header in cases where the original `Content-Length` is stripped. This might be useful for debugging or certain use cases.
