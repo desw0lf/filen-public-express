@@ -1,4 +1,4 @@
-[![preview](https://github.com/user-attachments/assets/44822c21-73a5-47c4-a80b-72e924cdf213)](#)
+[![preview](https://github.com/user-attachments/assets/79545fa1-90cb-49ce-8730-d94a462fd73e)](#)
 
 <blockquote>
 <div>
