@@ -4,6 +4,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/desw0lf/filen-public-express"
+  },
   "homepage": "https://github.com/desw0lf/filen-public-express#readme",
   "scripts": {
     "tsc": "tsc --build",
